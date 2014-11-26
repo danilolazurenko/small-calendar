@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if session.logged_in %}
+        <form action = "{{ url_for('add_art') }}" method="post" enctype="multipart/form-data">
+        <table>
+        <tr><td>Назва вірша</td></tr>
+        <tr><td><input type="text" class="form-control" size = "30" name = "poetryname"></td></tr>
+        <tr><td>Текст</td></tr>
+        <tr><td><textarea type="text" class ="form-control" name="poetry" rows="5" cols="40"></textarea></td></tr>
+        <tr><td><input type="submit" class="btn" value="Додати вірша"></td></tr>
+        </table>
+        </form>
+{% endif %}
+        {% for art in art %}
+        <h3><b>{{ art.poetryname}}
+            {% if session.logged_in %}<span id ={{art.id}} class = "glyphicon glyphicon-remove"></span>
+            {% endif %}</b></h3><br>
+        {{art.poetry|safe()}}
+        {% endfor %}
+{% endblock %}
+

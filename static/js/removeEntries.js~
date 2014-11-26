@@ -1,0 +1,9 @@
+
+function removeEntries(){
+$(.glyphicon-remove).bind('click',function(){
+$.getJSON($SCRIPT_ROOT+'/remove', {id : $(this).attr('id')}, 
+function() {}
+}
+
+)});
+}

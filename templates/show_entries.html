@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if session.logged_in %}
+<form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+<table>
+<tr>Місце:</tr>
+<tr><input type="text" class ="form-control" name="mplace"></tr>
+<tr>Місяць:</tr>
+<tr><select class = "form-control" name="mmonth"  id ="mon" onchange = "changeDaysInMonth();">
+<option value="">-- mon --</option>
+<option value="1"> 1</option>
+<option value="2"> 2</option>
+<option value="3"> 3</option>
+<option value="4"> 4</option>
+<option value="5"> 5</option>
+<option value="6"> 6</option>
+<option value="7"> 7</option>
+<option value="8"> 8</option>
+<option value="9"> 9</option>
+<option value="10"> 10</option>
+<option value="11"> 11</option>
+<option value="12"> 12</option>
+</select></tr>
+<tr>День:</tr>
+<tr><select class="form-control" name="mday" id ="daynum" ></select></tr>
+<tr>Час:</tr>
+<tr><input type="text" class = "form-control"  name="mtime"></tr>
+<tr>Організатори або назва:</tr>
+<tr><textarea name="nath" class="form-control" rows="5" cols="40"></textarea></tr>
+<tr>Телефон:</tr>
+<tr><input class="form-control" type="text"  name="telephone"></tr>
+<tr><input type="submit" class="btn" value="Додати зустріч"></tr>
+</table>
+</form>
+
+<table class="table table-bordered">
+<tr><td>Встреча</td><td>Место</td><td>Дата</td><td>Время</td><td>Телефон</td><td>Видалити</td></tr>
+{% for entry in entries %}
+<tr id = "{{ entry.id }}">
+    <td>{{ entry.nath }}</td><td> {{ entry.mplace }}</td> <td>{{entry.mday}}.{{ entry.mmonth }}</td> <td> {{ entry.mtime }} </td><td>{{ entry.telephone }}</td>
+<td >
+    <input type="submit" id = "{{ entry.id }}" onclick = "removeEntries();" class="btn btn-default btn-sm"  value="Видалити"><!--   " -->
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+
+<table class="table table-bordered">
+<tr><td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Нд</td></tr>
+{% for day in dc %}
+{% if (day[0] == 0) and (day[2] != t_c[1]) %} <tr> <td id = "nim"> {{ day[1] }} </td>
+{% elif (day[0] == 0) and (day[2] == t_c[1]) %} <tr> <td id = "im"> {{ day[1] }} </td>
+{% elif (day[0] == 6) and (day[2] != t_c[1]) %} <td id = "nim"> {{ day[1] }} </td> </tr>
+{% elif (day[0] == 6) and (day[2] == t_c[1]) %} <td id ="im"> {{ day[1] }} </td> </tr>
+{% elif (day[2] != t_c[1]) %} <td id = "nim"> {{ day[1] }} </td>
+{% elif (day[2] == t_c[1]) %} <td id = "im"> {{ day[1] }} </td>
+{% endif %}
+{% endfor %}
+</table>
+
+<table class="table table-bordered">
+<tr><td>Встреча</td><td>Место</td><td>Дата</td><td>Время</td><td>Телефон</td></tr>
+{% for entry in entries %}
+<tr><td>{{ entry.nath }}</td><td> {{ entry.mplace }}</td> <td>{{entry.mday}}.{{ entry.mmonth }}</td> <td> {{ entry.mtime }} </td><td>{{ entry.telephone }}</td>
+</tr>
+{% endfor %}
+</table>
+    {% endblock %}

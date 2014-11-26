@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<title>Розклад</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<script type = "text/javascript" src="{{ url_for('static', filename = 'js/jquery-2.1.1.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script type = "text/javascript" src="{{ url_for('static', filename = 'js/ChangeDaysInMonth.js') }}"></script>
+<script type="text/javascript" >
+/*
+(function(){
+var $SCRIPT_ROOT = {{ request.base_url|tojson|safe}};
+var id;
+var destination = $SCRIPT_ROOT +"remove";
+var deleteItem = function() {
+        id = $(this).attr("id");
+        $.post(destination, {"id" : id},
+        function( data ) {
+                        if(data.status == 1) {
+                            var sel =  "#" + id;
+                            $(sel).unbind( "click", deleteItem);
+                            $(sel).remove();
+                            return false;
+                        } else {
+                            // say something
+                        }
+                        },
+        "json");
+}
+$(function() {$(".btn-del").bind('click', deleteItem);});
+)();*/
+(function() {
+        var $SCRIPT_ROOT = {{ request.base_url|tojson|safe }};
+        var id;
+        var destination='';
+        var deleteItem = function() {
+            id = $(this).attr("id");
+            if (String(id).charAt(0) == 'e'){ destination = $SCRIPT_ROOT + 'remove'; }
+            else if (String(id).charAt(0) == 'p') { destination = $SCRIPT_ROOT + '/remove_art'; }
+            $.getJSON( destination,
+                {id : $(this).attr("id")}
+            ).done(function( data ) {
+                        if(data.status == 1) {
+                            var sel =  "#" + id;
+                            $(sel).unbind( "click", deleteItem);
+                            $(sel).remove();
+                            return false;
+                        } else {
+                            // say something
+                        }
+            });
+        };
+
+        $(function() {
+            $(".btn-del").bind('click', deleteItem);
+        });
+    })();
+</script>
+<script type="text/javascript" >
+  /*  (function() {
+        var $SCRIPT_ROOT = {{ request.base_url|tojson|safe }};
+        var id;
+        var destination='';
+        var addItem = function() {
+            //id = $(this).attr("id');
+            var place = $('#mplace').val();
+            var mmonth = $('#mon').val();
+            var mday = $('#daynum').val();
+            var mtime = $('#mtime').val();
+            var nath = $('#nath').val();
+            var telephone  = $('#telephone').val();
+            if (String(id).charAt(0) == 'e'){ destination = $SCRIPT_ROOT + 'add';
+             $.getJSON( destination,
+                { mplace : $('#mplace').val() , mmonth : $('#mon').val(), mday : $('#daynum').val(), mtime : $('#mtime').val(),
+                  nath : $('#nath').val(), telephone : $('#telephone').val() }
+            ).done(function( data ) {
+                        if(data.status == 1) {
+                        sel = "e"+id;
+                        $('</tr>:last').append(<tr id = sel><td>$('#nath').val()</td><td>$('#mplace').val()</td>
+                        <td>$('#daynum').val() . $('#mon').val()</td><td>$('#mtime').val()</td><td>$('#telephone').val()</td></tr>);
+                        return false;
+                        } else {
+                        alert("Something went wrong!");
+
+                            // допилить этот скрипт, доделать стиль, научиться размещать картинки, написать небольшой блог
+                        }
+            });
+             }
+            else if (String(id).charAt(0) == 'p') { destination = $SCRIPT_ROOT + 'add_art'; }
+        };
+
+        $(function() {
+            $(".btn-add").bind('click', addItem);
+        });
+    })();*/
+</script>
+<div class="container">
+
+<div class="page">
+
+ <nav>
+ <ul class="nav nav-pills ">
+ <li role="presentation"><a href="{{ url_for('show_entries') }}">Зустрічі</a></li>
+ <li role="presentation"><a href="{{ url_for('show_art') }}">Мистецтво</a></li>
+ </ul>
+</nav>
+
+<div class = "metanav">
+{% if not session.logged_in %}
+<a href="{{ url_for('login') }}">log in</a>
+{% else %}
+<a href="{{ url_for('logout') }}">log out</a>
+{% endif %}
+</div>
+{% for message in get_flashed_messages() %}
+<div class="flash">{{ message }}</div>
+{% endfor %}
+{% block body %}{% endblock %}
+</div>
+</div>
+</html>
